@@ -4,3 +4,8 @@ Feature: Login Functionality
     Given the user opens the application
     And enters the username and password
     Then clicks on signin button
+    And click on object icon
+    
+
+  
+    
