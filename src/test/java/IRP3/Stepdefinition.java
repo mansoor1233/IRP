@@ -1,6 +1,8 @@
 package IRP3;
 
+import java.io.IOException;
 import java.time.Duration;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -35,14 +37,14 @@ public class Stepdefinition extends Baseclass {
 
 	@And("Enters the username as {string} and password as {string}")
 	public void enters_the_username_as_and_password_as(String uname, String pwd) throws InterruptedException {
-		
+
 		Thread.sleep(5000);
 		po.setUserName(uname);
 		po.setPassword(pwd);
 	}
 
 	@Then("Clicks on signin button")
-	public void clicks_on_signin_button() { 
+	public void clicks_on_signin_button() {
 		po.Signin();
 
 	}
@@ -110,6 +112,49 @@ public class Stepdefinition extends Baseclass {
 
 		po.Number();
 		po.Submit();
+
+	}
+
+	// 2nd Featurefile
+
+	@Then("Get the tabledata to excel")
+	public void get_the_tabledata_to_excel() throws IOException {
+
+		int pagination = 1, counter = 1;
+		while (pagination != 0) {
+			String excel = "DATA//toexcel.xlsx";
+			XLUtility xlUtil = new XLUtility(excel);
+			xlUtil.setCellData("Sheet1", 0, 0, "Sno");
+			xlUtil.setCellData("Sheet1", 0, 1, "Campaign");
+			xlUtil.setCellData("Sheet1", 0, 2, "TotalPositions");
+
+			List<WebElement> table = driver.findElements(By.xpath("//table//tbody//tr"));
+			int rows = table.size();
+			System.out.println(rows);
+			for (int r = 1; r <= rows; r++) {
+				String Sno = driver.findElement(By.xpath("//table//tbody/tr[" + r + "]//td[1]")).getText();
+				String Campaign = driver.findElement(By.xpath("//table//tbody/tr[" + r + "]//td[2]")).getText();
+				String TotalPositions = driver.findElement(By.xpath("//table//tbody/tr[" + r + "]//td[3]")).getText();
+
+				xlUtil.setCellData("Sheet1", counter, 0, Sno);
+				xlUtil.setCellData("Sheet1", counter, 1, Campaign);
+				xlUtil.setCellData("Sheet1", counter, 2, TotalPositions);
+
+				counter++;
+				System.out.println("Sno:" + Sno + ", Campaign: " + Campaign + ", TotalPositions: " + TotalPositions);
+			}
+			if (driver.findElement(By.xpath("//a[@title='Next page']")).equals("-1")) {
+				break;
+			} else {
+				WebElement next = driver.findElement(By.xpath("//a[@title='Next page']"));
+				System.out.println(driver.findElement(By.xpath("//a[@title='Next page']")));
+				next.click();
+			}
+
+			pagination++;
+		}
+		System.out.println("Webscrapping  is successfully done and fetch to excel file ");
+//				driver. Close();
 
 	}
 
