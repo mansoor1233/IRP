@@ -7,7 +7,7 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "Feature", dryRun = false, monochrome = true, plugin = {
-		"html:target/cucumber-html-report.html" }
+		"html:target/IRP.html" }
 
 )
 public class TestRunner {
