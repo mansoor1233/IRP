@@ -6,8 +6,11 @@ import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "Feature", dryRun = false, monochrome = true, plugin = {
-		"html:target/IRP.html" }
+@CucumberOptions(features = { "Feature" }, 
+					//glue = "Stepdefinition",
+					plugin = { "html:target/Appian3.html" },
+ monochrome = true
+
 
 )
 public class TestRunner {

@@ -5,7 +5,6 @@ import java.time.Duration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -17,30 +16,34 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class Stepdefinition {
+public class Stepdefinition extends Baseclass {
 
-	WebDriver driver;
-
-	@Given("The user opens the application")
-	public void the_user_opens_the_application() {
+	@Given("The user launches the chromebrowser")
+	public void the_user_launches_the_chromebrowser() {
 
 		WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
-		driver.get("https://techtamminaapps.appiancloud.com/suite/sites/irp3-users-site");
-
-	}
-
-	@And("Enters the username and password")
-	public void enters_the_username_and_password() {
-		driver.findElement(By.xpath("//input[@id='un']")).sendKeys("appianrpa.bot");
-		driver.findElement(By.xpath("//input[@id='pw']")).sendKeys("Tammina123");
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		po = new Pageobject(driver);
+	}
+
+	@Given("user opens the application url {string}")
+	public void user_opens_the_application_url(String url) {
+		driver.navigate().to(url);
+	}
+
+	@And("Enters the username as {string} and password as {string}")
+	public void enters_the_username_as_and_password_as(String uname, String pwd) throws InterruptedException {
+		
+		Thread.sleep(5000);
+		po.setUserName(uname);
+		po.setPassword(pwd);
 	}
 
 	@Then("Clicks on signin button")
-	public void clicks_on_signin_button() {
-		driver.findElement(By.xpath("//input[@value='Sign In']")).click();
+	public void clicks_on_signin_button() { 
+		po.Signin();
 
 	}
 
@@ -52,12 +55,11 @@ public class Stepdefinition {
 
 	@And("User Clicks on the create new campaign button")
 	public void user_clicks_on_the_create_new_campaign_button() {
-		driver.findElement(By.xpath("//span[normalize-space()='CREATE CAMPAIGN']")).click();
+		po.CreateCampaign();
 	}
 
-	@And("Enters the Required fields")
-	public void enters_the_required_fields() throws InterruptedException {
-
+	@Then("Enters the Role Dropdown")
+	public void enters_the_role_dropdown() throws InterruptedException {
 		Thread.sleep(5000);
 		((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
 
@@ -65,13 +67,24 @@ public class Stepdefinition {
 
 		dropdown.click();
 
-		dropdown.sendKeys("pyt" + Keys.ENTER);
+		dropdown.sendKeys("Jav" + Keys.ENTER);
 
-		driver.findElement(By.xpath("//input[@id='5506ac8c5cc46c3ca1a37bb1d2204d1d']")).sendKeys("Java,phython");
+	}
 
-		driver.findElement(By.xpath("//input[@id='aa5ad04ab99beedc74423921e7674b4f']")).sendKeys("20");
+	@Then("Enter the Keyskills")
+	public void enter_the_keyskills() {
+		driver.findElement(By.xpath("//input[@id='5506ac8c5cc46c3ca1a37bb1d2204d1d']")).sendKeys("Java,Corejava"); // keyskills
+	}
 
-		driver.findElement(By.xpath("//button[@class='DatePickerWidget---calendar_btn']")).click();
+	@Then("Enter the Requirement")
+	public void enter_the_requirement() {
+		driver.findElement(By.xpath("//input[@id='aa5ad04ab99beedc74423921e7674b4f']")).sendKeys("21");// Requirement
+
+	}
+
+	@Then("Enddate")
+	public void enddate() throws InterruptedException {
+		po.date();
 
 		WebElement mondrpdown = driver.findElement(By.xpath("//div[@class='DatePicker---month css-2b097c-container']"));
 
@@ -95,11 +108,8 @@ public class Stepdefinition {
 		ac.sendKeys(Keys.DOWN).pause(Duration.ofSeconds(1));
 		ac.sendKeys(Keys.ENTER).build().perform();
 
-		driver.findElement(By.xpath("//table//tbody//tr[2]//td[6]")).click();
-
-		driver.findElement(By.xpath("//button[text()='SUBMIT']")).click();
-
-		
+		po.Number();
+		po.Submit();
 
 	}
 
