@@ -7,10 +7,12 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = { "Feature" },
-		// glue = "Stepdefinition",
-		tags = "@Table", plugin = { "html:target/Appian3.html" }, monochrome = true
+		 //glue = "Stepdefinition",
+		//tags = "@DecisionMaker,@Table", 
+				publish = true,
+				plugin = { "html:target/Appian3.html" }, monochrome = true
 
 )
-public class TestRunner {
+public class TestRunner {  
 
 }

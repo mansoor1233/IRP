@@ -2,6 +2,7 @@ package IRP3;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -92,7 +93,7 @@ public class Stepdefinition extends Baseclass {
 
 		mondrpdown.click();
 
-		new WebDriverWait(driver, Duration.ofSeconds(5))
+		new WebDriverWait(driver, Duration.ofSeconds(10))
 				.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("DatePicker---calendar")));
 
 		Thread.sleep(5000);
@@ -118,11 +119,11 @@ public class Stepdefinition extends Baseclass {
 	// 2nd Featurefile
 
 	@Then("Get the tabledata to excel")
-	public void get_the_tabledata_to_excel() throws IOException {
+	public void get_the_tabledata_to_excel() throws IOException, InterruptedException {
 
 		int pagination = 1, counter = 1;
 		while (pagination != 0) {
-			String excel = "DATA//toexcel.xlsx";
+			String excel = "DATA//TotalPositions.xlsx";
 			XLUtility xlUtil = new XLUtility(excel);
 			xlUtil.setCellData("Sheet1", 0, 0, "Sno");
 			xlUtil.setCellData("Sheet1", 0, 1, "Campaign");
@@ -132,6 +133,7 @@ public class Stepdefinition extends Baseclass {
 			int rows = table.size();
 			System.out.println(rows);
 			for (int r = 1; r <= rows; r++) {
+
 				String Sno = driver.findElement(By.xpath("//table//tbody/tr[" + r + "]//td[1]")).getText();
 				String Campaign = driver.findElement(By.xpath("//table//tbody/tr[" + r + "]//td[2]")).getText();
 				String TotalPositions = driver.findElement(By.xpath("//table//tbody/tr[" + r + "]//td[3]")).getText();
@@ -139,22 +141,37 @@ public class Stepdefinition extends Baseclass {
 				xlUtil.setCellData("Sheet1", counter, 0, Sno);
 				xlUtil.setCellData("Sheet1", counter, 1, Campaign);
 				xlUtil.setCellData("Sheet1", counter, 2, TotalPositions);
-
+				Thread.sleep(3000);
 				counter++;
 				System.out.println("Sno:" + Sno + ", Campaign: " + Campaign + ", TotalPositions: " + TotalPositions);
 			}
-			if (driver.findElement(By.xpath("//a[@title='Next page']")).equals("-1")) {
-				break;
-			} else {
-				WebElement next = driver.findElement(By.xpath("//a[@title='Next page']"));
-				System.out.println(driver.findElement(By.xpath("//a[@title='Next page']")));
+//				if (driver.findElement(By.xpath("//a[@aria-label='Next page']")).equals("-1")) {
+//
+//					Thread.sleep(1000);
+//					WebElement next = driver.findElement(By.xpath("//a[@aria-label='Next page']"));
+//
+//					next.click();
+//					Thread.sleep(2000);
+//				} else {
+//					break;
+
+			if (driver.findElement(By.xpath("//a[@aria-label='Next page']")).getAttribute("aria-disabled")
+					.contains("false")) {
+				WebElement next = driver.findElement(By.xpath("//a[@aria-label='Next page']"));
+				Thread.sleep(1000);
 				next.click();
+				Thread.sleep(5000);
+			} else {
+
+				break;
+
 			}
 
 			pagination++;
+
 		}
 		System.out.println("Webscrapping  is successfully done and fetch to excel file ");
-//				driver. Close();
+//		driver. Close();
 
 	}
 
